@@ -1,26 +1,14 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Hero} from './hero';
-
-const HEROES: Hero[] = [
-  {id: 11, name: 'Mr. Nice'},
-  {id: 12, name: 'Narco'},
-  {id: 13, name: 'Bombasto'},
-  {id: 14, name: 'Celeritas'},
-  {id: 15, name: 'Magneta'},
-  {id: 16, name: 'RubberMan'},
-  {id: 17, name: 'Dynama'},
-  {id: 18, name: 'Dr IQ'},
-  {id: 19, name: 'Magma'},
-  {id: 20, name: 'Tornado'}
-];
+import {HeroService} from './hero.service';
 
 @Component({
   selector: 'my-app',
   styles: [`
-    .selected {
-      background-color: #CFD8DC !important;
-      color: white;
-    }
+    /*.selected {*/
+    /*background-color: #CFD8DC !important;*/
+    /*color: white;*/
+    /*}*/
 
     .heroes {
       margin: 0 0 2em 0;
@@ -40,10 +28,10 @@ const HEROES: Hero[] = [
       border-radius: 4px;
     }
 
-    .heroes li.selected:hover {
-      background-color: #BBD8DC !important;
-      color: white;
-    }
+    /*.heroes li.selected:hover {*/
+    /*background-color: #BBD8DC !important;*/
+    /*color: white;*/
+    /*}*/
 
     .heroes li:hover {
       color: #607D8B;
@@ -51,10 +39,10 @@ const HEROES: Hero[] = [
       left: .1em;
     }
 
-    .heroes .text {
-      position: relative;
-      top: -3px;
-    }
+    /*.heroes .text {*/
+    /*position: relative;*/
+    /*top: -3px;*/
+    /*}*/
 
     .heroes .badge {
       display: inline-block;
@@ -83,13 +71,27 @@ const HEROES: Hero[] = [
     </ul>
     <hero-detail [hero]="selectedHero"></hero-detail>
   `,
+  providers: [HeroService]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Tour of Heroes';
-  heroes = HEROES;
+  heroes: Hero[];
   selectedHero: Hero;
+
+  constructor(private heroService: HeroService) {
+  }
+
+  ngOnInit(): void {
+    this.getHeroes();
+  }
 
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+  }
+
+  getHeroes(): void {
+    this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+    // Get heroes slowly simulating latency
+    // this.heroService.getHeroesSlowly().then(heroes => this.heroes = heroes);
   }
 }
